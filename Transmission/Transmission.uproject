@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{4A1C6819-41E2-D471-4DDE-12AA45F43C7B}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Transmission",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

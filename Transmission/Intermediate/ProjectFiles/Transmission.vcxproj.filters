@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<None Include="..\..\Transmission.uproject" />
+		<Filter Include="Source">
+			<UniqueIdentifier>{DCE486D9-8495-4F69-84F0-3788C8BF6DB2}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\Transmission.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<None Include="..\..\Source\TransmissionEditor.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<Filter Include="Config">
+			<UniqueIdentifier>{90FABABC-236D-474D-B10B-97F530569744}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Config\DefaultEditor.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEngine.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultGame.ini">
+			<Filter>Config</Filter>
+		</None >
+		<Filter Include="Source\Transmission">
+			<UniqueIdentifier>{B8A7BA85-CF87-46F8-A270-D025E79ED6D9}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\Transmission\Transmission.Build.cs">
+			<Filter>Source\Transmission</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\Transmission\Transmission.cpp">
+			<Filter>Source\Transmission</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\Transmission\Transmission.h">
+			<Filter>Source\Transmission</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\Transmission\TransmissionGameModeBase.cpp">
+			<Filter>Source\Transmission</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\Transmission\TransmissionGameModeBase.h">
+			<Filter>Source\Transmission</Filter>
+		</ClInclude >
+	</ItemGroup>
+</Project>
