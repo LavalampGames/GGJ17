@@ -36,6 +36,18 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
 	void ProgressEvent();
 
+	/**
+	* Generic events should also be able to resolve in the background without player input
+	*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event Management")
+	void BackgroundResolveEvent();
+
+	/**
+	* Calculate multiplier for event occuring
+	*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event Management")
+	float CalculateEventMultiplier();
+
 protected:
 
 	/**
@@ -49,4 +61,10 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence Management")
 	int current_sequence_index_;
+
+	/**
+	* Multiplier for the likelihood of this event occuring
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Management")
+	float event_multiplier_;
 };

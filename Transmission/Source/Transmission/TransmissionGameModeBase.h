@@ -5,11 +5,10 @@
 #include "Sequence.h"
 #include "CoreMinimal.h"
 #include "Response.h"
+#include "GameGroup.h"
 #include "GameFramework/GameModeBase.h"
 #include "TransmissionGameModeBase.generated.h"
-/**
- * 
- */
+
 UENUM(BlueprintType)
 enum class ESequenceChannel: uint8
 {
@@ -29,6 +28,10 @@ class TRANSMISSION_API ATransmissionGameModeBase : public AGameModeBase
 
 	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
 	void SequenceResponse(AResponse* response, ESequenceChannel channels);
+
+	// Simulator for combat event between two groups
+	UFUNCTION(BlueprintCallable, Category = "Game Management")
+	void SimulateCombatEvent(AGameGroup* groupA, AGameGroup* groupB);
 
 	// sequence channels
 	ASequence* sequence_channels_[3];
