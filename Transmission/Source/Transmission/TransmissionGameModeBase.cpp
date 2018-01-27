@@ -1,10 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TransmissionGameModeBase.h"
+#include "Misc/OutputDevice.h"
+#include <sstream>
 
 void ATransmissionGameModeBase::SequenceBegin(ASequence* sequence, AStimulus* stimulus, int channel)
 {
 	sequence_channels_[channel] = sequence;
+	const void* pointer = static_cast<const void*>(stimulus);
+	std::stringstream ss;
+	ss << pointer;
+	//FString address = TEXT(ss.str());
+	//FOutputDeviceDebug debug;
+	//CallFunctionByNameWithArguments(TEXT("Sequence Begin 0"), debug, this, true);
 	sequence->SequenceBegin(stimulus);
 }
 
@@ -43,11 +51,11 @@ void ATransmissionGameModeBase::SequenceResponse(AResponse* response, ESequenceC
 void ATransmissionGameModeBase::SimulateCombatEvent(AGameGroup* groupA, AGameGroup* groupB)
 {
 	// calculate group A combat score
-	TArray<FCharacterAndInfluence> group_A_characters = groupA->GetCharacters();
+	TArray<AGameCharacter*> group_A_characters = groupA->GetCharacters();
 	float group_a_combat_total = 0;
 	for (int i = 0; i < group_A_characters.Num(); i++)
 	{
-		group_a_combat_total += group_A_characters[i].character->CalculateCombatLevel();
+		group_a_combat_total += group_A_characters[i]->CalculateCombatLevel();
 	}
 	group_a_combat_total *= (groupA->GetCombatSupplyLevel() <= group_A_characters.Num()) ? groupA->GetCombatSupplyLevel() / group_A_characters.Num() : 1.0f;
 	
@@ -55,11 +63,11 @@ void ATransmissionGameModeBase::SimulateCombatEvent(AGameGroup* groupA, AGameGro
 	group_a_combat_total *= 1.1f;
 
 	// calculate group B combat score
-	TArray<FCharacterAndInfluence> group_B_characters = groupB->GetCharacters();
+	TArray<AGameCharacter*> group_B_characters = groupB->GetCharacters();
 	float group_b_combat_total = 0;
 	for (int i = 0; i < group_B_characters.Num(); i++)
 	{
-		group_b_combat_total += group_B_characters[i].character->CalculateCombatLevel();
+		group_b_combat_total += group_B_characters[i]->CalculateCombatLevel();
 	}
 	group_b_combat_total *= (groupB->GetCombatSupplyLevel() <= group_B_characters.Num()) ? groupB->GetCombatSupplyLevel() / group_B_characters.Num() : 1.0f;
 
@@ -68,7 +76,7 @@ void ATransmissionGameModeBase::SimulateCombatEvent(AGameGroup* groupA, AGameGro
 	{
 		for (int i = 0; i < group_A_characters.Num(); i++)
 		{
-			group_A_characters[i].character->TakeCharacterDamage(0.5f);
+			group_A_characters[i]->TakeCharacterDamage(0.5f);
 		}
 		// victor steals supplies from loser
 		groupB->ModifyCombatSupplyLevel(groupA->ModifyCombatSupplyLevel(1.0f));
@@ -79,7 +87,7 @@ void ATransmissionGameModeBase::SimulateCombatEvent(AGameGroup* groupA, AGameGro
 	{
 		for (int i = 0; i < group_B_characters.Num(); i++)
 		{
-			group_B_characters[i].character->TakeCharacterDamage(0.5f);
+			group_B_characters[i]->TakeCharacterDamage(0.5f);
 		}
 		// victor steals supplies from loser
 		groupA->ModifyCombatSupplyLevel(groupB->ModifyCombatSupplyLevel(1.0f));

@@ -23,6 +23,7 @@ class TRANSMISSION_API ATransmissionGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
 	void SequenceBegin(ASequence* sequence, AStimulus* stimulus, int channel);
 
@@ -33,6 +34,7 @@ class TRANSMISSION_API ATransmissionGameModeBase : public AGameModeBase
 	UFUNCTION(BlueprintCallable, Category = "Game Management")
 	void SimulateCombatEvent(AGameGroup* groupA, AGameGroup* groupB);
 
+protected:
 	// sequence channels
 	ASequence* sequence_channels_[3];
 };

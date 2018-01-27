@@ -1,45 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GameEvent.h"
+#include "GameLocation.h"
 
 
 // Sets default values
-AGameEvent::AGameEvent()
+AGameLocation::AGameLocation()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	current_sequence_index_ = 0;
 }
 
 // Called when the game starts or when spawned
-void AGameEvent::BeginPlay()
+void AGameLocation::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AGameEvent::Tick(float DeltaTime)
+void AGameLocation::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void AGameEvent::BeginEvent_Implementation()
-{
-}
-
-void AGameEvent::ProgressEvent_Implementation()
-{
-}
-
-void AGameEvent::BackgroundResolveEvent_Implementation()
-{
-}
-
-float AGameEvent::CalculateEventMultiplier_Implementation()
-{
-	return 0.0f;
 }
 

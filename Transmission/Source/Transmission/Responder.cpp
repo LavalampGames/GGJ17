@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Responder.h"
-
+#include "Components/StaticMeshComponent.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AResponder::AResponder()
@@ -9,6 +10,13 @@ AResponder::AResponder()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	responder_mesh_ = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Responder Visuals"));
+	responder_mesh_->SetupAttachment(RootComponent);
+
+	responder_audio_ = CreateDefaultSubobject<UAudioComponent>(TEXT("Responder Audio"));
+	responder_audio_->SetupAttachment(responder_mesh_);
+
+	OnClicked.AddDynamic(this, &AResponder::ClickResponse);
 }
 
 // Called when the game starts or when spawned
@@ -46,4 +54,11 @@ void AResponder::AddResponses(TArray<AResponse*> responses)
 void AResponder::RemoveResponse(AResponse* response)
 {
 	available_responses_.Remove(response);
+}
+
+void AResponder::ClickResponse(AActor* other, FKey key)
+{
+	responder_audio_->Play();
+
+	DisplayAvailableResponses();
 }

@@ -7,6 +7,9 @@
 #include "GameEvent.h"
 #include "GameCharacter.generated.h"
 
+const float MEDICAL_SUPPLY_COST = 1.0f;
+const float FOOD_SUPPLY_COST = 1.0f;
+
 UCLASS()
 class TRANSMISSION_API AGameCharacter : public AActor
 {
@@ -36,60 +39,60 @@ public:
 	/**
 	* Character's name used to identify them in events
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	FString character_name_;
 
 	/**
 	* Personality modifier representing how much this character trusts the player
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float trust_level_;
 	
 	/**
 	* Custom story events attached to this specific character
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	TArray<AGameEvent*> story_events_;
 
 	/**
 	* Personality modifier representing how violently this character reacts to others
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float aggression_level_;
 
 	/**
 	* Personality modifer representing this characters combat proficiency
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float combat_level_;
 
 	/**
 	* Personality modifier representing this characters medical proficiency
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float medical_level_;
 
 	/**
 	* Personality modifier representing this characters survival proficiency
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float survival_level_;
 
 	/**
 	* Personality modifier representing this characters age
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float age_;
 
 	/**
 	* Modifier for this characters general health level
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float health_level_;
 
 	/**
 	* Modifier for this characters food level
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Attribute")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Attribute")
 	float food_level_;
 };

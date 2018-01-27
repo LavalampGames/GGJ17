@@ -27,25 +27,25 @@ public:
 	/**
 	* Sets up sequences that are used by this event
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Sequence Management")
 	void BeginEvent();
 
 	/**
 	* Once a sequence is complete we should clean it up and move to the next sequence
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Sequence Management")
 	void ProgressEvent();
 
 	/**
 	* Generic events should also be able to resolve in the background without player input
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event Management")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Event Management")
 	void BackgroundResolveEvent();
 
 	/**
 	* Calculate multiplier for event occuring
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event Management")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Event Management")
 	float CalculateEventMultiplier();
 
 protected:

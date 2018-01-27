@@ -47,8 +47,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Response Management")
 	void RemoveResponse(AResponse* response);
 
+	/**
+	* On click response function
+	*/
+	UFUNCTION()
+	void ClickResponse(AActor* other, FKey key);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Response Management")
 	TArray<AResponse*> available_responses_;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	class UStaticMeshComponent* responder_mesh_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	class UAudioComponent* responder_audio_;
 };

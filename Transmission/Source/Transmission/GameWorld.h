@@ -6,7 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "GameGroup.h"
 #include "GameEvent.h"
+#include "GameLocation.h"
 #include "GameWorld.generated.h"
+
+const float DAY_LENGTH = 120.0f;
 
 USTRUCT()
 struct FEventAndMultiplier
@@ -40,7 +43,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// transisitions the day
+	void TransitionDay();
+
+	// returns the locations in the game
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	TArray<AGameLocation*> GetLocations() { return locations_; }
+
 protected:
+	/**
+	* Locations within the game world
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
+	TArray<AGameLocation*> locations_;
 
 	/**
 	* Player controlled groups that are currently active in the world
@@ -55,4 +70,9 @@ protected:
 	TArray<AGameGroup*> autonomous_groups_;
 
 	float minimum_required_event_;
+
+	float day_timer_;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Management")
+	int day_number_;
 };

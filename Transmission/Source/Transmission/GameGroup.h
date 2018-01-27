@@ -7,15 +7,21 @@
 #include "GameFramework/Actor.h"
 #include "GameGroup.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FCharacterAndInfluence
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite)
+	FCharacterAndInfluence()
+	{
+		character = nullptr;
+		influence_level = 0;
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group")
 	AGameCharacter* character;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group")
 	float influence_level;
 };
 
@@ -37,7 +43,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Getter for group characters
-	TArray<FCharacterAndInfluence> GetCharacters();
+	TArray<AGameCharacter*> GetCharacters();
 
 	// Getter for combat supply level
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
@@ -79,59 +85,84 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Event Managment")
 	float CalculateGenericEventMultiplier();
 
+	// Getter for is in event
+	UFUNCTION(BlueprintCallable, Category = "Event Managment")
+	inline bool GetIsInEvent() { return in_event_; }
+
+	// Setter for is in event
+	UFUNCTION(BlueprintCallable, Category = "Event Managment")
+	void SetIsInEvent(bool value) { in_event_ = value; }
+
+	// Logic for group eating
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void GroupEat();
+
+	// Logic for group eating
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void GroupHeal();
+
+public:
+	int group_index_;
+
 protected:
 
 	/**
 	* Custom story events attached to this specific group
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Event Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Management")
 	TArray<AGameEvent*> story_events_;
 
 	/**
 	* Container for characters in the group and their influence over group decisions
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Character Management")
-	TArray<FCharacterAndInfluence> characters_;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Management")
+	TArray<AGameCharacter*> characters_;
 
 	/**
 	* Tracker for food supply level of group
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	float food_supply_level_;
 
 	/**
 	* Tracker for medical supply level of group
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	float medical_supply_level_;
 
 	/**
 	* Tracker for combat supply level of group
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	float combat_supply_level_;
 
 	/**
 	* Tracker for current world location of group
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	FVector2D current_location_;
 
 	/**
 	* Tracker for duration since last event
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	float time_since_last_event_;
 
 	/**
 	* Tracker for if group is engaged in event
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	bool in_event_;
 
 	/**
 	* Tracker for if group has consumed food yet this day
 	*/
-	UPROPERTY(BlueprintReadWrite, Category = "Group Management")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	bool has_eaten_;
+
+	/**
+	* Tracker for if group has healed yet this day
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
+	bool has_healed_;
 };

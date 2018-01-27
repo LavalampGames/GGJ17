@@ -31,6 +31,18 @@ void ASequence::Tick(float DeltaTime)
 	}
 }
 
+void ASequence::SequenceBegin(AStimulus * stimulus)
+{
+}
+
+void ASequence::SequenceResolve(AResponse * response)
+{
+}
+
+void ASequence::SequenceResolveNoResponse()
+{
+}
+
 void ASequence::CleanupResponses()
 {
 	for (int i = 0; i < responses_.Num(); i++)

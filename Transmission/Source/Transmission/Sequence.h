@@ -21,20 +21,20 @@ public:
 	* Logic that must be processed based on stimulus passed to a sequence
 	* Outputs an array of valid responses that the player can use
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
-	void SequenceBegin(AStimulus* stimulus);
+	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
+	virtual void SequenceBegin(AStimulus* stimulus);
 
 	/**
 	* Logic that must be processed based on response that the player selects
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
-	void SequenceResolve(AResponse* response);
+	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
+	virtual void SequenceResolve(AResponse* response);
 
 	/**
 	* Logic that must be processed if the player does not respond in any way
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
-	void SequenceResolveNoResponse();
+	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
+	virtual void SequenceResolveNoResponse();
 
 	/**
 	* Clean up all responses created by this sequence
