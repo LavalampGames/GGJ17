@@ -1,0 +1,62 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Response.h"
+#include "Stimulus.h"
+#include "GameFramework/Actor.h"
+#include "Sequence.generated.h"
+
+UCLASS()
+class TRANSMISSION_API ASequence : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	// Sets default values for this actor's properties
+	ASequence();
+
+	/**
+	* Logic that must be processed based on stimulus passed to a sequence
+	* Outputs an array of valid responses that the player can use
+	*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
+	void SequenceBegin(AStimulus* stimulus);
+
+	/**
+	* Logic that must be processed based on response that the player selects
+	*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
+	void SequenceResolve(AResponse* response);
+
+	/**
+	* Logic that must be processed if the player does not respond in any way
+	*/
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sequence Management")
+	void SequenceResolveNoResponse();
+
+	/**
+	* Clean up all responses created by this sequence
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Response Management")
+	void CleanupResponses();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+protected:
+
+	/**
+	* Some events may be time sensitive so should keep track of how long they have existed for
+	*/
+	float expiry_time_;
+	float response_wait_timer_;
+	
+	// track responses created by this sequence for deletion
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Response Management")
+	TArray<AResponse*> responses_;
+};
