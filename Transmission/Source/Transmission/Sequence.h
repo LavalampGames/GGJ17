@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Sequence.generated.h"
 
+class AGameEvent;
+
 UCLASS()
 class TRANSMISSION_API ASequence : public AActor
 {
@@ -40,6 +42,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Response Management")
 	void CleanupResponses();
 
+	/**
+	* Set the parent event of this sequence
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
+	void SetParentEvent(AGameEvent* parent_event);
+
+	/**
+	* Get the parent event of this sequence
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
+	AGameEvent* GetParentEvent();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,10 +67,26 @@ protected:
 	/**
 	* Some events may be time sensitive so should keep track of how long they have existed for
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence Management")
 	float expiry_time_;
+
 	float response_wait_timer_;
 	
-	// track responses created by this sequence for deletion
+	/**
+	* Track the parent event for this sequence so it can be informed when execution is complete
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence Management")
+	AGameEvent* parent_event_;
+
+	/**
+	* Track responses created by this sequence for deletion
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Response Management")
 	TArray<AResponse*> responses_;
+
+	/**
+	* Track stimulus created for this sequence for deletion
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sequence Management")
+	AStimulus* stimulus_;
 };

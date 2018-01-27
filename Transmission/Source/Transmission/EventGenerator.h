@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Response.generated.h"
-class AResponder;
+#include "EventGenerator.generated.h"
+
 UCLASS()
-class TRANSMISSION_API AResponse : public AActor
+class TRANSMISSION_API AEventGenerator : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AResponse();
+	AEventGenerator();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,12 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Response Management" )
-	void SetParentResponder(AResponder* responder);
-
-	UFUNCTION(BlueprintCallable, Category = "Response Management")
-	AResponder* GetParentResponder();
-
-protected:
-	AResponder* parent_responder_;
+	
+	
 };

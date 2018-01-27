@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Response.h"
-#include "Responder.h"
+#include "EventGenerator.h"
+
 
 // Sets default values
-AResponse::AResponse()
+AEventGenerator::AEventGenerator()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,26 +12,16 @@ AResponse::AResponse()
 }
 
 // Called when the game starts or when spawned
-void AResponse::BeginPlay()
+void AEventGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AResponse::Tick(float DeltaTime)
+void AEventGenerator::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void AResponse::SetParentResponder(AResponder* responder)
-{
-	parent_responder_ = responder;
-}
-
-AResponder* AResponse::GetParentResponder()
-{
-	return parent_responder_;
 }
 

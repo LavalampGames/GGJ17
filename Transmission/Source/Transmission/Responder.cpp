@@ -29,13 +29,17 @@ void AResponder::Tick(float DeltaTime)
 void AResponder::AddResponse(AResponse* response)
 {
 	available_responses_.Add(response);
+	response->SetParentResponder(this);
 }
 
 // Add responses to this object
 void AResponder::AddResponses(TArray<AResponse*> responses)
 {
 	for (int i = 0; i < responses.Num(); i++)
+	{
 		available_responses_.Add(responses[i]);
+		responses[i]->SetParentResponder(this);
+	}
 }
 
 // Remove a response from this object
