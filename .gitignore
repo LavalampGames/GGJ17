@@ -2,3 +2,7 @@
 *.VC
 *.opendb
 *.db
+Transmission/Saved/
+Transmission/Intermediate/
+Transmission/Debug/
+Transmission/Binaries/
