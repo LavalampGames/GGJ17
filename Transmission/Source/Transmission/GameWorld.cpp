@@ -17,6 +17,7 @@ AGameWorld::AGameWorld()
 	day_number_ = 1;
 	day_timer_ = 0;
 
+	player_location_ = "Kentville";
 	minimum_required_event_ = DAY_LENGTH / 3.0f;
 }
 
@@ -31,15 +32,51 @@ void AGameWorld::BeginPlay()
 	}
 }
 
-float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group)
+float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group, AGameGroup*& targetGroup)
 {
-	return 0.0f;
+	// check if any player groups are nearby
+	FVector2D current_location = group->GetPosition();
+	float nearest_distance = 1000;
+	AGameGroup* target_group = nullptr;
+	for (AGameGroup* enemy_group : player_controlled_groups_)
+	{
+		if (enemy_group != group)
+		{
+			FVector2D target_location = enemy_group->GetPosition();
+
+			float distance = FVector2D::Distance(current_location, target_location);
+			if (distance < nearest_distance)
+			{
+				nearest_distance = distance;
+				target_group = enemy_group;
+			}
+		}
+	}
+
+	targetGroup = target_group;
+
+	if (target_group != nullptr)
+	{
+		if (nearest_distance > 2.0f)
+			return group->GetTimeSinceLastEvent() * 1.0f;
+		else
+			return group->GetTimeSinceLastEvent() * 2.0f;
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
 void AGameWorld::TransitionDay()
 {
 	day_timer_ = 0;
 	day_number_++;
+
+	for (AGameGroup* group : player_controlled_groups_)
+	{
+		group->EndOfDay();
+	}
 }
 
 void AGameWorld::SpawnRobots(int count)
@@ -64,10 +101,20 @@ void AGameWorld::SpawnRobots(int count)
 
 void AGameWorld::AttractRobots()
 {
+	AGameLocation* location = GetLocationByName(player_location_);
 	for (AGameGroup* group : autonomous_groups_)
 	{
-		group->SetTargetLocation
+		group->SetTargetLocation(location);
 	}
+}
+
+AGameLocation * AGameWorld::GetLocationByName(FString location_name)
+{
+	for (AGameLocation* location : locations_)
+	{
+
+	}
+	return nullptr;
 }
 
 // Called every frame
@@ -112,10 +159,11 @@ void AGameWorld::Tick(float DeltaTime)
 			// check if there are any active character story events - but don't yet because I can't be arsed
 
 			// check the 4 generic events
+			AGameGroup* targetGroup = nullptr;
 			float food_event_multiplier = group->CalculateFoodEventMultiplier();
 			float medical_event_multiplier = group->CalculateMedicalEventMultiplier();
 			float generic_event_multiplier = group->CalculateGenericEventMultiplier();
-			float combat_event_multiplier = CalculateCombatEventMultiplier(group);
+			float combat_event_multiplier = CalculateCombatEventMultiplier(group, targetGroup);
 
 			// determine the highest multiplier
 			highest_multiplier = std::max(food_event_multiplier, std::max(medical_event_multiplier, std::max(generic_event_multiplier, combat_event_multiplier)));
@@ -148,6 +196,7 @@ void AGameWorld::Tick(float DeltaTime)
 				// spawn the combat event
 				ACombatEvent* combat_event = GetWorld()->SpawnActor<ACombatEvent>();
 				combat_event->associated_groups_.Add(group);
+				combat_event->associated_groups_.Add(targetGroup);
 				if (combat_event_multiplier == highest_multiplier)
 					current_event = combat_event;
 				else

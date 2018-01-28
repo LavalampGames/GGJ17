@@ -25,6 +25,8 @@ class TRANSMISSION_API ATransmissionGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable, Category = "Sequence Management")
 	void SequenceBegin(ASequence* sequence, AStimulus* stimulus, int channel);
 
@@ -36,6 +38,7 @@ public:
 	void SimulateCombatEvent(AGameGroup* groupA, AGameGroup* groupB);
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Management")
 	AGameWorld* game_world_;
 
 protected:

@@ -9,7 +9,7 @@
 
 void AGenericConversationSequence::SequenceBegin(AStimulus* stimulus)
 {
-	expiry_time_ = 4.0f;
+	expiry_time_ = 2.0f;
 
 	stimulus_ = stimulus;
 
@@ -48,12 +48,18 @@ void AGenericConversationSequence::SequenceResolveNoResponse()
 	}
 	}
 
-	stimulus_->groups_[0]->SetIsInEvent(false);
+	if(stimulus_ != nullptr)
+		stimulus_->groups_[0]->SetIsInEvent(false);
+
 	CleanupResponses();
+	parent_event_->ProgressEvent();
 }
 
 void AGenericConversationSequence::Hunt()
 {
+	if (stimulus_ == nullptr)
+		return;
+
 	AGameGroup* group = stimulus_->groups_[0];
 
 	float survival_count = 0;
@@ -78,6 +84,9 @@ void AGenericConversationSequence::Hunt()
 
 void AGenericConversationSequence::Scavenge()
 {
+	if (stimulus_ == nullptr)
+		return;
+
 	AGameGroup* group = stimulus_->groups_[0];
 
 	float survival_count = 0;
@@ -103,6 +112,9 @@ void AGenericConversationSequence::Scavenge()
 
 void AGenericConversationSequence::Redirect()
 {
+	if (stimulus_ == nullptr)
+		return;
+
 	ATransmissionGameModeBase* game_mode = (ATransmissionGameModeBase*)GetWorld()->GetAuthGameMode();
 	AGameWorld* game_world = game_mode->game_world_;
 

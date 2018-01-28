@@ -14,7 +14,7 @@ void AFoodEvent::BeginEvent_Implementation()
 	AStimulus* stimulus = GetWorld()->SpawnActor<AStimulus>();
 	stimulus->groups_.Add(associated_groups_[0]);
 
-	game_mode->SequenceBegin(sequence, nullptr, 0);
+	game_mode->SequenceBegin(sequence, stimulus, 0);
 }
 
 void AFoodEvent::ProgressEvent_Implementation()

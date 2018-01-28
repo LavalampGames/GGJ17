@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameCharacter.h"
-
+#include "GameGroup.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -36,5 +36,9 @@ float AGameCharacter::CalculateCombatLevel()
 
 void AGameCharacter::TakeCharacterDamage(float amount)
 {
-
+	health_level_ -= amount;
+	if (health_level_ <= 0.0f)
+	{
+		parent_group_->RemoveCharacter(this);
+	}
 }

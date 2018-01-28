@@ -2,7 +2,15 @@
 
 #include "TransmissionGameModeBase.h"
 #include "Misc/OutputDevice.h"
+#include "Kismet/GameplayStatics.h"
 #include <sstream>
+
+void ATransmissionGameModeBase::BeginPlay()
+{
+	TArray<AActor*> worlds;
+	UGameplayStatics::GetAllActorsOfClass(this, AGameWorld::StaticClass(), worlds);
+	game_world_ = (AGameWorld*)worlds[0];
+}
 
 void ATransmissionGameModeBase::SequenceBegin(ASequence* sequence, AStimulus* stimulus, int channel)
 {

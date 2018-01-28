@@ -32,6 +32,32 @@ TArray<AGameCharacter*> AGameGroup::GetCharacters()
 	return characters_;
 }
 
+void AGameGroup::EndOfDay()
+{
+	for (AGameCharacter* character : characters_)
+	{
+		character->food_level_ -= 0.25f;
+	}
+
+	if (has_eaten_ == false)
+		GroupEat();
+
+	if (has_healed_ == false)
+		GroupHeal();
+
+	TArray<AGameCharacter*> characters = GetCharacters();
+	for (AGameCharacter* character : characters)
+	{
+		if (character->food_level_ <= 0)
+		{
+			character->TakeCharacterDamage(0.25f);
+		}
+	}
+
+	has_eaten_ = false;
+	has_healed_ = false;
+}
+
 float AGameGroup::ModifyCombatSupplyLevel(float amount)
 {
 	if (amount < 0)
@@ -131,7 +157,7 @@ float AGameGroup::CalculateMedicalEventMultiplier()
 
 float AGameGroup::CalculateGenericEventMultiplier()
 {
-	return time_since_last_event_ * 8.0f;
+	return time_since_last_event_  / 2.0f;
 }
 
 void AGameGroup::GroupEat()
@@ -141,6 +167,8 @@ void AGameGroup::GroupEat()
 		for (AGameCharacter* character : characters_)
 		{
 			character->food_level_ += 0.25f;
+			if (character->food_level_ > 1.0f)
+				character->food_level_ = 1.0f;
 			food_supply_level_ -= FOOD_SUPPLY_COST;
 		}
 
@@ -150,6 +178,23 @@ void AGameGroup::GroupEat()
 
 void AGameGroup::GroupHeal()
 {
+	int injury_count = 0;
+	for (AGameCharacter* character : characters_)
+	{
+		if (character->health_level_ < 0.5f)
+			injury_count++;
+	}
+
+	if (medical_supply_level_ >= injury_count * MEDICAL_SUPPLY_COST)
+	{
+		for (AGameCharacter* character : characters_)
+		{
+			character->health_level_ += 0.25f;
+			if (character->health_level_ > 1.0f)
+				character->health_level_ = 1.0f;
+		}
+		medical_supply_level_ -= injury_count * MEDICAL_SUPPLY_COST;
+	}
 }
 
 void AGameGroup::AddCharacter(AGameCharacter* character)

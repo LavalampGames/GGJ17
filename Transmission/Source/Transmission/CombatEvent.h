@@ -22,12 +22,5 @@ public:
 	virtual void BackgroundResolveEvent_Implementation() override;
 	virtual float CalculateEventMultiplier_Implementation() override;
 	
-	void SetGroups(AGameGroup* groupA, AGameGroup* groupB)
-	{
-		combat_groups_[0] = groupA;
-		combat_groups_[1] = groupB;
-	}
-
 protected:
-	AGameGroup* combat_groups_[2];
 };

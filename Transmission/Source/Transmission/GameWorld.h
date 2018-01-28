@@ -9,7 +9,7 @@
 #include "GameLocation.h"
 #include "GameWorld.generated.h"
 
-const float DAY_LENGTH = 120.0f;
+const float DAY_LENGTH = 15.0f;
 
 USTRUCT()
 struct FEventAndMultiplier
@@ -37,9 +37,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Called to calculate the combat chance of a group
-	float CalculateCombatEventMultiplier(AGameGroup* group);
+	float CalculateCombatEventMultiplier(AGameGroup* group, AGameGroup*& targetGroup);
 
-	AGameGroup* GetNearestGroup(AGameGroup* group);
 
 public:	
 	// Called every frame
@@ -62,7 +61,19 @@ public:
 
 	// get location by name
 	UFUNCTION(BlueprintCallable, Category = "World Management")
-	AGameLocation* GetLocationByName()
+	AGameLocation* GetLocationByName(FString location_name);
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	float GetDayTimer() { return day_timer_; }
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	int GetDayNumber() { return day_number_; }
+
+public:
+	// Location of the player
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
+	FString player_location_;
+
 protected:
 	/**
 	* Locations within the game world
@@ -84,6 +95,7 @@ protected:
 
 	float minimum_required_event_;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Management")
 	float day_timer_;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Management")

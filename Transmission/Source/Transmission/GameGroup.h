@@ -124,6 +124,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	FVector2D GetPosition() { return current_location_; }
 
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	float GetTimeSinceLastEvent() { return time_since_last_event_; }
+
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetTimeSinceLastEvent(float time) { time_since_last_event_ = time; }
+
+	// processing for end of day
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void EndOfDay();
+
 public:
 	int group_index_;
 

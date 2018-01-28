@@ -7,19 +7,23 @@
 
 void AGenericEvent::BeginEvent_Implementation()
 {
+	associated_groups_[0]->SetIsInEvent(true);
+
 	AGenericConversationSequence* sequence = GetWorld()->SpawnActor<AGenericConversationSequence>();
+	sequence->SetParentEvent(this);
 	event_sequences_.Add(sequence);
 
 	ATransmissionGameModeBase* game_mode = (ATransmissionGameModeBase*)GetWorld()->GetAuthGameMode();
 	AStimulus* stimulus = GetWorld()->SpawnActor<AStimulus>();
 	stimulus->groups_.Add(associated_groups_[0]);
 
-	game_mode->SequenceBegin(sequence, nullptr, 0);
+	game_mode->SequenceBegin(sequence, stimulus, 0);
 }
 
 void AGenericEvent::ProgressEvent_Implementation()
 {
 	associated_groups_[0]->SetIsInEvent(false);
+	associated_groups_[0]->SetTimeSinceLastEvent(0);
 
 	// clean up the sequence
 	event_sequences_[0]->Destroy();

@@ -27,6 +27,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	TArray<FString> GetCurrentAlerts() { return current_alerts_; }
 
+	
 protected:
 	TArray<AGameEvent*> previous_events_;
 
