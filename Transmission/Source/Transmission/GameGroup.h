@@ -134,6 +134,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void EndOfDay();
 
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void GroupMove();
+
 public:
 	int group_index_;
 
@@ -141,6 +144,7 @@ protected:
 	/**
 	* Current target location of the group
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Management")
 	AGameLocation* target_location_;
 
 	/**
@@ -202,4 +206,10 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	bool has_healed_;
+
+	/**
+	* Group speed
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
+	float group_speed_;
 };

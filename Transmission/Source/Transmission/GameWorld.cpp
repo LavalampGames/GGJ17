@@ -40,7 +40,7 @@ float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group, AGameGroup*
 	AGameGroup* target_group = nullptr;
 	for (AGameGroup* enemy_group : player_controlled_groups_)
 	{
-		if (enemy_group != group)
+		if (enemy_group != group && enemy_group->GetIsInEvent() == false)
 		{
 			FVector2D target_location = enemy_group->GetPosition();
 
@@ -57,8 +57,8 @@ float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group, AGameGroup*
 
 	if (target_group != nullptr)
 	{
-		if (nearest_distance > 2.0f)
-			return group->GetTimeSinceLastEvent() * 1.0f;
+		if (nearest_distance > 10.0f)
+			return group->GetTimeSinceLastEvent() * 1.5f;
 		else
 			return group->GetTimeSinceLastEvent() * 2.0f;
 	}
@@ -73,10 +73,34 @@ void AGameWorld::TransitionDay()
 	day_timer_ = 0;
 	day_number_++;
 
+	TArray<AGameGroup*> dead_groups;
 	for (AGameGroup* group : player_controlled_groups_)
 	{
 		group->EndOfDay();
+		if (group->GetCharacters().Num() <= 0)
+			dead_groups.Add(group);
 	}
+	
+	for (AGameGroup* d_group : dead_groups)
+	{
+		player_controlled_groups_.Remove(d_group);
+		d_group->Destroy();
+	}
+	dead_groups.Empty();
+
+	for (AGameGroup* group : autonomous_groups_)
+	{
+		group->GroupMove();		
+		if (group->GetCharacters().Num() <= 0)
+			dead_groups.Add(group);
+	}
+
+	for (AGameGroup* d_group : dead_groups)
+	{
+		autonomous_groups_.Remove(d_group);
+		d_group->Destroy();
+	}
+	dead_groups.Empty();
 }
 
 void AGameWorld::SpawnRobots(int count)

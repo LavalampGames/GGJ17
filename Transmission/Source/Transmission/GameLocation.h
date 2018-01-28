@@ -27,9 +27,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	TArray<FString> GetCurrentAlerts() { return current_alerts_; }
 
-	
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	FVector2D GetPosition() { return position_; }
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	void AddAlert(FString alert);
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	int ModifyFoodSupplies(int amount);
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	int ModifyMedicalSupplies(int amount);
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	int ModifyCombatSupplies(int amount);
 protected:
 	TArray<AGameEvent*> previous_events_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
+	FVector2D position_;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
 	TArray<FString> current_alerts_;
@@ -45,6 +61,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldManagement")
 	float threat_level_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldManagement")
+	float drop_timer_;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldManagement")
 	FString location_name_;

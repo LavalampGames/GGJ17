@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameGroup.h"
+#include "TransmissionGameModeBase.h"
+#include "Engine/World.h"
 
 // Sets default values
 AGameGroup::AGameGroup()
@@ -9,6 +11,7 @@ AGameGroup::AGameGroup()
 	PrimaryActorTick.bCanEverTick = true;
 
 	in_event_ = false;
+	group_speed_ = 10;
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +19,16 @@ void AGameGroup::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// randomly select a location in the world to go to
+	ATransmissionGameModeBase* game_mode = (ATransmissionGameModeBase*)GetWorld()->GetAuthGameMode();
+	TArray<AGameLocation*> locations = game_mode->game_world_->GetLocations();
+	target_location_ = locations[FMath::RandRange(0, locations.Num() - 1)];
+
+	// randomise starting location
+	FVector2D start;
+	start.X = FMath::RandRange(0, 99);
+	start.Y = FMath::RandRange(0, 99);
+	SetPosition(start);
 }
 
 // Called every frame
@@ -24,7 +37,9 @@ void AGameGroup::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (in_event_ == false)
+	{
 		time_since_last_event_ += DeltaTime;
+	}
 }
 
 TArray<AGameCharacter*> AGameGroup::GetCharacters()
@@ -56,6 +71,70 @@ void AGameGroup::EndOfDay()
 
 	has_eaten_ = false;
 	has_healed_ = false;
+
+	GroupMove();
+}
+
+void AGameGroup::GroupMove()
+{
+	// move towards the location
+	if (target_location_ != nullptr)
+	{
+		FVector2D target_position = target_location_->GetPosition();
+		if (target_position.X > current_location_.X)
+		{
+			current_location_.X = (FMath::Abs(current_location_.X - target_position.X) >= group_speed_) ? current_location_.X + group_speed_ : current_location_.X + FMath::Abs(current_location_.X - target_position.X);
+		}
+		else if (target_position.X < current_location_.X)
+		{
+			current_location_.X = (FMath::Abs(current_location_.X - target_position.X) >= group_speed_) ? current_location_.X - group_speed_ : current_location_.X - FMath::Abs(current_location_.X - target_position.X);
+		}
+
+		if (target_position.Y > current_location_.Y)
+		{
+			current_location_.Y = (FMath::Abs(current_location_.Y - target_position.Y) >= group_speed_) ? current_location_.Y + group_speed_ : current_location_.Y + FMath::Abs(current_location_.Y - target_position.Y);
+		}
+		else if (target_position.Y < current_location_.Y)
+		{
+			current_location_.Y = (FMath::Abs(current_location_.Y - target_position.Y) >= group_speed_) ? current_location_.Y - group_speed_ : current_location_.Y - FMath::Abs(current_location_.Y - target_position.Y);
+		}
+
+		ATransmissionGameModeBase* game_mode = (ATransmissionGameModeBase*)GetWorld()->GetAuthGameMode();
+		TArray<AGameLocation*> locations = game_mode->game_world_->GetLocations();
+		if (target_position == current_location_)
+		{
+			FString alert = "A group of " + FString::FromInt(characters_.Num()) + " recently passed through.";
+			target_location_->AddAlert(alert);
+
+			// take supplies from the location
+			food_supply_level_ += target_location_->ModifyFoodSupplies(characters_.Num() * 3);
+			medical_supply_level_ += target_location_->ModifyMedicalSupplies(characters_.Num());
+			combat_supply_level_ += target_location_->ModifyCombatSupplies(characters_.Num());
+
+			// randomly select a location in the world to go to
+			AGameLocation* prev_location = target_location_;
+			while (target_location_ == prev_location)
+			{
+				
+				target_location_ = locations[FMath::RandRange(0, locations.Num() - 1)];
+			}
+		}
+		else
+		{
+			// check if the group has passed close to any other locations
+			for (AGameLocation* location : locations)
+			{
+				if (location != target_location_)
+				{
+					if (FVector2D::Distance(current_location_, location->GetPosition()) <= 3)
+					{
+						FString alert = "A group of " + FString::FromInt(characters_.Num()) + " recently passed nearby.";
+						location->AddAlert(alert);
+					}
+				}
+			}
+		}
+	}
 }
 
 float AGameGroup::ModifyCombatSupplyLevel(float amount)
