@@ -44,4 +44,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldManagement")
 	float threat_level_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldManagement")
+	FString location_name_;
 };
