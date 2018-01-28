@@ -4,26 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Sequence.h"
-#include "FoodConversationSequence.generated.h"
+#include "GenericConversationSequence.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRANSMISSION_API AFoodConversationSequence : public ASequence
+class TRANSMISSION_API AGenericConversationSequence : public ASequence
 {
 	GENERATED_BODY()
 	
 public:
-	
 	virtual void SequenceBegin(AStimulus* stimulus) override;
 	virtual void SequenceResolve(AResponse* response) override;
 	virtual void SequenceResolveNoResponse() override;
-	
-protected:
 
+protected:
 	void Hunt();
-	void FeedYoung();
-	void FeedStrong();
-	void FeedWeak();
+	void Scavenge();
+	void Redirect();
+	void Nothing();
 };

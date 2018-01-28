@@ -97,14 +97,41 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void GroupEat();
 
+	// setter for has eaten
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetHasEaten(bool eaten) { has_eaten_ = eaten; }
+
 	// Logic for group eating
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void GroupHeal();
+
+	// setter for group direction
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetTargetLocation(AGameLocation* location) { target_location_ = location; }
+
+	// add a character to the group
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void AddCharacter(AGameCharacter* character);
+	
+	// remove a character from the group
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void RemoveCharacter(AGameCharacter* character);
+
+	// setter for group position
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetPosition(FVector2D position) { current_location_ = position; }
+	
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	FVector2D GetPosition() { return current_location_; }
 
 public:
 	int group_index_;
 
 protected:
+	/**
+	* Current target location of the group
+	*/
+	AGameLocation* target_location_;
 
 	/**
 	* Custom story events attached to this specific group

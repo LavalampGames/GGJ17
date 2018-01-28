@@ -42,6 +42,34 @@ void AGameWorld::TransitionDay()
 	day_number_++;
 }
 
+void AGameWorld::SpawnRobots(int count)
+{
+	AGameGroup* robot_group = GetWorld()->SpawnActor<AGameGroup>();
+
+	for (int i = 0; i < count; i++)
+	{
+		AGameCharacter* robot = GetWorld()->SpawnActor<AGameCharacter>();
+		robot->combat_level_ = 9001;
+		robot->medical_level_ = 0;
+		robot->survival_level_ = 0;
+		robot_group->AddCharacter(robot);
+	}
+
+	FVector2D pos;
+	pos.X = FMath::RandRange(0, 99);
+	pos.Y = FMath::RandRange(0, 99);
+	robot_group->SetPosition(pos);
+	autonomous_groups_.Add(robot_group);
+}
+
+void AGameWorld::AttractRobots()
+{
+	for (AGameGroup* group : autonomous_groups_)
+	{
+		group->SetTargetLocation
+	}
+}
+
 // Called every frame
 void AGameWorld::Tick(float DeltaTime)
 {
@@ -96,7 +124,8 @@ void AGameWorld::Tick(float DeltaTime)
 			if (food_event_multiplier >= minimum_required_event_)
 			{
 				// spawn the food event
-				AGameEvent* food_event = nullptr;
+				AFoodEvent* food_event = GetWorld()->SpawnActor<AFoodEvent>();
+				food_event->associated_groups_.Add(group);
 				if (food_event_multiplier == highest_multiplier)
 					current_event = food_event;
 				else
@@ -106,7 +135,8 @@ void AGameWorld::Tick(float DeltaTime)
 			if (medical_event_multiplier >= minimum_required_event_)
 			{
 				// spawn the food event
-				AGameEvent* medical_event = nullptr;
+				AMedicalEvent* medical_event = GetWorld()->SpawnActor<AMedicalEvent>();
+				medical_event->associated_groups_.Add(group);
 				if (medical_event_multiplier == highest_multiplier)
 					current_event = medical_event;
 				else
@@ -117,6 +147,7 @@ void AGameWorld::Tick(float DeltaTime)
 			{
 				// spawn the combat event
 				ACombatEvent* combat_event = GetWorld()->SpawnActor<ACombatEvent>();
+				combat_event->associated_groups_.Add(group);
 				if (combat_event_multiplier == highest_multiplier)
 					current_event = combat_event;
 				else
@@ -127,7 +158,7 @@ void AGameWorld::Tick(float DeltaTime)
 			{
 				// spawn the generic event
 				AGenericEvent* generic_event = GetWorld()->SpawnActor<AGenericEvent>();
-				generic_event->SetGroup(group);
+				generic_event->associated_groups_.Add(group);
 				current_event = generic_event;
 			}
 
@@ -143,6 +174,8 @@ void AGameWorld::Tick(float DeltaTime)
 			{
 				hidden_event->BackgroundResolveEvent();
 			}
+
+			auto_resolve_events.Empty();
 		}
 	}
 }

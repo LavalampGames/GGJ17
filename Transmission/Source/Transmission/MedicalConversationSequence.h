@@ -3,21 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Response.h"
-#include "RadioResponse.generated.h"
+#include "Sequence.h"
+#include "MedicalConversationSequence.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRANSMISSION_API ARadioResponse : public AResponse
+class TRANSMISSION_API AMedicalConversationSequence : public ASequence
 {
 	GENERATED_BODY()
-
-public:
-	ARadioResponse();
-
-
-
-protected:
+	
+	
+	
+	
 };

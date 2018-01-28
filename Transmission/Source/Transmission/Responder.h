@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Responder.generated.h"
+#define LOCTEXT_NAMESPACE "Namespace"
 
 UCLASS()
 class TRANSMISSION_API AResponder : public AActor
@@ -26,8 +27,8 @@ public:
 	/**
 	* Displays to the player available responses using this reponder
 	*/
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Response Management")
-	void DisplayAvailableResponses();
+	UFUNCTION(BlueprintCallable, Category = "Response Management")
+	virtual void DisplayAvailableResponses();
 	
 	/**
 	* Add responses to this responder
@@ -52,8 +53,13 @@ public:
 	*/
 	UFUNCTION()
 	void ClickResponse(AActor* other, FKey key);
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Response Management")
+	int response_channel_;
 
 protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Response Management")
 	TArray<AResponse*> available_responses_;
 	
@@ -62,4 +68,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
 	class UAudioComponent* responder_audio_;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	class USceneComponent* response_offset_location_;
 };

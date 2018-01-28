@@ -39,6 +39,8 @@ protected:
 	// Called to calculate the combat chance of a group
 	float CalculateCombatEventMultiplier(AGameGroup* group);
 
+	AGameGroup* GetNearestGroup(AGameGroup* group);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -50,6 +52,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	TArray<AGameLocation*> GetLocations() { return locations_; }
 
+	// spawns a group of robots of count size in the world
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	void SpawnRobots(int count);
+
+	// attracts robots to your location
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	void AttractRobots();
+
+	// get location by name
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	AGameLocation* GetLocationByName()
 protected:
 	/**
 	* Locations within the game world

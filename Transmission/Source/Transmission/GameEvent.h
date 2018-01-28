@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "GameEvent.generated.h"
 
 class ASequence;
+class AGameGroup;
+
 UCLASS()
 class TRANSMISSION_API AGameEvent : public AActor
 {
@@ -47,6 +50,9 @@ public:
 	*/
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Event Management")
 	float CalculateEventMultiplier();
+
+public:
+	TArray<AGameGroup*> associated_groups_;
 
 protected:
 

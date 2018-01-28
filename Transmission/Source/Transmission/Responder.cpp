@@ -3,6 +3,7 @@
 #include "Responder.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/AudioComponent.h"
+#include "Components/TextRenderComponent.h"
 
 // Sets default values
 AResponder::AResponder()
@@ -16,7 +17,12 @@ AResponder::AResponder()
 	responder_audio_ = CreateDefaultSubobject<UAudioComponent>(TEXT("Responder Audio"));
 	responder_audio_->SetupAttachment(responder_mesh_);
 
+	response_offset_location_ = CreateDefaultSubobject<USceneComponent>(TEXT("Offset Location"));
+	response_offset_location_->SetupAttachment(responder_mesh_);
+
 	OnClicked.AddDynamic(this, &AResponder::ClickResponse);
+
+	response_channel_ = 0;
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +37,19 @@ void AResponder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AResponder::DisplayAvailableResponses()
+{
+	FVector offset = response_offset_location_->GetComponentTransform().GetLocation();
+	int index = 0;
+	for (AResponse* response : available_responses_)
+	{
+		response->SetActorLocation(offset);
+		response->response_text_renderer_->SetVisibility(true);
+		response->response_text_renderer_->SetText(response->response_text_);
+		offset.Z += 25;
+	}
 }
 
 // Add single response to this object

@@ -131,7 +131,7 @@ float AGameGroup::CalculateMedicalEventMultiplier()
 
 float AGameGroup::CalculateGenericEventMultiplier()
 {
-	return time_since_last_event_ * 2.0f;
+	return time_since_last_event_ * 8.0f;
 }
 
 void AGameGroup::GroupEat()
@@ -143,9 +143,23 @@ void AGameGroup::GroupEat()
 			character->food_level_ += 0.25f;
 			food_supply_level_ -= FOOD_SUPPLY_COST;
 		}
+
+		has_eaten_ = true;
 	}
 }
 
 void AGameGroup::GroupHeal()
 {
+}
+
+void AGameGroup::AddCharacter(AGameCharacter* character)
+{
+	characters_.Add(character);
+	character->SetParentGroup(this);
+}
+
+void AGameGroup::RemoveCharacter(AGameCharacter* character)
+{
+	characters_.Remove(character);
+	character->Destroy();
 }

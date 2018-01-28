@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameGroup.h"
 #include "Stimulus.generated.h"
 
 UCLASS()
@@ -23,6 +24,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	TArray<AGameGroup*> groups_;
 };

@@ -7,6 +7,7 @@
 #include "Response.h"
 #include "GameGroup.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameWorld.h"
 #include "TransmissionGameModeBase.generated.h"
 
 UENUM(BlueprintType)
@@ -33,6 +34,9 @@ public:
 	// Simulator for combat event between two groups
 	UFUNCTION(BlueprintCallable, Category = "Game Management")
 	void SimulateCombatEvent(AGameGroup* groupA, AGameGroup* groupB);
+
+public:
+	AGameWorld* game_world_;
 
 protected:
 	// sequence channels

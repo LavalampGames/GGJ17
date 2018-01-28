@@ -7,6 +7,8 @@
 #include "GameEvent.h"
 #include "GameCharacter.generated.h"
 
+class AGameGroup;
+
 const float MEDICAL_SUPPLY_COST = 1.0f;
 const float FOOD_SUPPLY_COST = 1.0f;
 
@@ -35,7 +37,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attribute Management")
 	void TakeCharacterDamage(float damage);
 
+	// Set the group
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetParentGroup(AGameGroup* group) { parent_group_ = group; }
+
 public:
+	/**
+	* Character's parent group
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
+	AGameGroup* parent_group_;
+
 	/**
 	* Character's name used to identify them in events
 	*/

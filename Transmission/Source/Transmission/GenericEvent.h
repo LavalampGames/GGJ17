@@ -21,9 +21,6 @@ public:
 	virtual void ProgressEvent_Implementation() override;
 	virtual void BackgroundResolveEvent_Implementation() override;
 	virtual float CalculateEventMultiplier_Implementation() override;
-
-	inline void SetGroup(AGameGroup* group) { associated_group_ = group; }
-
+	
 protected:
-	AGameGroup* associated_group_;
 };
