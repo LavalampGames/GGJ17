@@ -16,6 +16,7 @@ class TRANSMISSION_API AGenericEvent : public AGameEvent
 	GENERATED_BODY()
 	
 public:
+	AGenericEvent();
 
 	virtual void BeginEvent_Implementation() override;
 	virtual void ProgressEvent_Implementation() override;

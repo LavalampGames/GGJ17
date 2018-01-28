@@ -105,6 +105,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void GroupHeal();
 
+	// setter for has healed
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetHasHealed(bool healed) { has_healed_ = healed; }
+
+	// setter for has fought
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	void SetHasFought(bool fought) { has_fought_ = fought; }
+
 	// setter for group direction
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void SetTargetLocation(AGameLocation* location) { target_location_ = location; }
@@ -137,8 +145,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Group Management")
 	void GroupMove();
 
+	UFUNCTION(BlueprintCallable, Category = "Group Management")
+	bool GetHasFought() { return has_fought_; }
+
 public:
 	int group_index_;
+	bool is_robot_;
 
 protected:
 	/**
@@ -206,6 +218,12 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
 	bool has_healed_;
+
+	/**
+	* Tracker for if group has fought yet this day
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Group Management")
+	bool has_fought_;
 
 	/**
 	* Group speed

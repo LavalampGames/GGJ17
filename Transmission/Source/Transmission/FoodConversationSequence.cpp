@@ -6,7 +6,7 @@
 
 void AFoodConversationSequence::SequenceBegin(AStimulus* stimulus)
 {
-	expiry_time_ = 4.0f;
+	expiry_time_ = 2.0f;
 
 	stimulus_ = stimulus;
 }
@@ -88,7 +88,7 @@ void AFoodConversationSequence::FeedYoung()
 		}
 
 		lowest->food_level_ += 0.25f;
-		group->ModifyFoodSupplyLevel(FOOD_SUPPLY_COST);
+		group->ModifyFoodSupplyLevel(-FOOD_SUPPLY_COST);
 		characters.Remove(lowest);
 	}
 
@@ -112,7 +112,7 @@ void AFoodConversationSequence::FeedStrong()
 		}
 
 		highest->food_level_ += 0.25f;
-		group->ModifyFoodSupplyLevel(FOOD_SUPPLY_COST);
+		group->ModifyFoodSupplyLevel(-FOOD_SUPPLY_COST);
 		characters.Remove(highest);
 	}
 
@@ -136,7 +136,7 @@ void AFoodConversationSequence::FeedWeak()
 		}
 
 		lowest->food_level_ += 0.25f;
-		group->ModifyFoodSupplyLevel(FOOD_SUPPLY_COST);
+		group->ModifyFoodSupplyLevel(-FOOD_SUPPLY_COST);
 		characters.Remove(lowest);
 	}
 

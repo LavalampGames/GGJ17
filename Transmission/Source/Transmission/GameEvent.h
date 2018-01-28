@@ -73,4 +73,10 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Management")
 	float event_multiplier_;
+
+	/**
+	* List of dialogue lines that might show up for this event
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Event Management")
+	TArray<FText> event_lines_;
 };

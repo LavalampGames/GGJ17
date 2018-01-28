@@ -10,6 +10,15 @@ AGameCharacter::AGameCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	character_name_ = "Joeneric";
+
+	// randomise stats
+	aggression_level_ = FMath::RandRange(0.5f, 2.0f);
+	combat_level_ = FMath::RandRange(0.5f, 2.0f);
+	medical_level_ = FMath::RandRange(0.5f, 2.0f);
+	survival_level_ = FMath::RandRange(0.5f, 2.0f);
+	age_ = FMath::RandRange(6.0f, 90.0f);
+	health_level_ = 1.0f;
+	food_level_ = 1.0f;
 }
 
 // Called when the game starts or when spawned

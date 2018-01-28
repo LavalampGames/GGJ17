@@ -9,7 +9,6 @@
 #include "GameLocation.h"
 #include "GameWorld.generated.h"
 
-const float DAY_LENGTH = 15.0f;
 
 USTRUCT()
 struct FEventAndMultiplier
@@ -57,8 +56,8 @@ public:
 
 	// attracts robots to your location
 	UFUNCTION(BlueprintCallable, Category = "World Management")
-	void AttractRobots();
-
+	void ToggleRobotAttract();
+	
 	// get location by name
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	AGameLocation* GetLocationByName(FString location_name);
@@ -69,12 +68,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	int GetDayNumber() { return day_number_; }
 
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	float GetDayLength() { return day_length_; }
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	AGameLocation* GetNearestLocation(FVector2D position);
+
+	UFUNCTION(BlueprintPure, BlueprintCallable, Category = "World Management")
+	int GetRemainingHumans();
+
 public:
 	// Location of the player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
 	FString player_location_;
 
 protected:
+	/**
+	* Length of a single day
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World Management")
+	float day_length_;
+
 	/**
 	* Locations within the game world
 	*/
@@ -100,4 +114,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Management")
 	int day_number_;
+
+	bool first_move_;
+
+	bool attracting_robots_;
 };

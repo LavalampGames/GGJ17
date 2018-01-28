@@ -17,8 +17,13 @@ AResponder::AResponder()
 	responder_audio_ = CreateDefaultSubobject<UAudioComponent>(TEXT("Responder Audio"));
 	responder_audio_->SetupAttachment(responder_mesh_);
 
-	response_offset_location_ = CreateDefaultSubobject<USceneComponent>(TEXT("Offset Location"));
-	response_offset_location_->SetupAttachment(responder_mesh_);
+	responder_text_ = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Response Text"));
+	responder_text_->SetVisibility(false);
+	responder_text_->SetTextRenderColor(FColor(0, 0, 0, 1));
+	responder_text_->SetXScale(0.5f);
+	responder_text_->SetYScale(0.5f);
+	responder_text_->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
+	responder_text_->SetupAttachment(responder_mesh_);
 
 	OnClicked.AddDynamic(this, &AResponder::ClickResponse);
 
@@ -37,19 +42,26 @@ void AResponder::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (response_timer_ < 4.0f)
+	{
+		response_timer_ += DeltaTime;
+		if (response_timer_ >= 4.0f)
+		{
+			responder_text_->SetVisibility(false);
+		}
+	}
 }
 
 void AResponder::DisplayAvailableResponses()
 {
-	FVector offset = response_offset_location_->GetComponentTransform().GetLocation();
-	int index = 0;
-	for (AResponse* response : available_responses_)
-	{
-		response->SetActorLocation(offset);
-		response->response_text_renderer_->SetVisibility(true);
-		response->response_text_renderer_->SetText(response->response_text_);
-		offset.Z += 25;
-	}
+	
+}
+
+void AResponder::DisplayResponseText(FText response_text)
+{
+	responder_text_->SetText(response_text);
+	responder_text_->SetVisibility(true);
+	response_timer_ = 0.0f;
 }
 
 // Add single response to this object

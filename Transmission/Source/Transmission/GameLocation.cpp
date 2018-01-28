@@ -66,8 +66,8 @@ void AGameLocation::AddAlert(FString alert)
 {
 	if (current_alerts_.Num() >= 3)
 	{
-		FString alert = current_alerts_[0];
-		current_alerts_.Remove(alert);
+		FString del_alert = current_alerts_[0];
+		current_alerts_.Remove(del_alert);
 	}
 	current_alerts_.Add(alert);
 }

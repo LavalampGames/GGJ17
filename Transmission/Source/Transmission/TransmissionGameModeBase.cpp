@@ -3,6 +3,7 @@
 #include "TransmissionGameModeBase.h"
 #include "Misc/OutputDevice.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 #include <sstream>
 
 void ATransmissionGameModeBase::BeginPlay()

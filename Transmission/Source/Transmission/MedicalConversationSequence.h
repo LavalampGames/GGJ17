@@ -14,7 +14,17 @@ class TRANSMISSION_API AMedicalConversationSequence : public ASequence
 {
 	GENERATED_BODY()
 	
-	
+public:
+
+	virtual void SequenceBegin(AStimulus* stimulus) override;
+	virtual void SequenceResolve(AResponse* response) override;
+	virtual void SequenceResolveNoResponse() override;
+
+protected:
+
+	void JuryRig();
+	void Triage();
+	void Leave();
 	
 	
 };

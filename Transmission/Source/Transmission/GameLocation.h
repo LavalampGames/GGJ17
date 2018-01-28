@@ -41,6 +41,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "World Management")
 	int ModifyCombatSupplies(int amount);
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	FString GetLocationName() { return location_name_; }
+
+	UFUNCTION(BlueprintCallable, Category = "World Management")
+	void ClearLocationAlerts() { current_alerts_.Empty(); }
+
 protected:
 	TArray<AGameEvent*> previous_events_;
 

@@ -31,6 +31,12 @@ public:
 	virtual void DisplayAvailableResponses();
 	
 	/**
+	* Displays the response text
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Response Management")
+	void DisplayResponseText(FText response_text);
+
+	/**
 	* Add responses to this responder
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Response Management")
@@ -70,5 +76,8 @@ protected:
 	class UAudioComponent* responder_audio_;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
-	class USceneComponent* response_offset_location_;
+	class UTextRenderComponent* responder_text_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	float response_timer_;
 };

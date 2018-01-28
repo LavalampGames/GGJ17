@@ -7,6 +7,9 @@
 
 void AFoodEvent::BeginEvent_Implementation()
 {
+	if (associated_groups_.Num() <= 0)
+		return;
+
 	AFoodConversationSequence* sequence = GetWorld()->SpawnActor<AFoodConversationSequence>();
 	event_sequences_.Add(sequence);
 

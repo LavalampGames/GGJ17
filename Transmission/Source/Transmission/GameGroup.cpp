@@ -11,7 +11,9 @@ AGameGroup::AGameGroup()
 	PrimaryActorTick.bCanEverTick = true;
 
 	in_event_ = false;
-	group_speed_ = 10;
+	is_robot_ = false;
+
+	group_speed_ = 5;
 }
 
 // Called when the game starts or when spawned
@@ -71,6 +73,7 @@ void AGameGroup::EndOfDay()
 
 	has_eaten_ = false;
 	has_healed_ = false;
+	has_fought_ = false;
 
 	GroupMove();
 }
@@ -103,7 +106,7 @@ void AGameGroup::GroupMove()
 		TArray<AGameLocation*> locations = game_mode->game_world_->GetLocations();
 		if (target_position == current_location_)
 		{
-			FString alert = "A group of " + FString::FromInt(characters_.Num()) + " recently passed through.";
+			FString alert = "A group of " + FString::FromInt(characters_.Num()) + " people recently passed through.";
 			target_location_->AddAlert(alert);
 
 			// take supplies from the location
@@ -121,17 +124,38 @@ void AGameGroup::GroupMove()
 		}
 		else
 		{
-			// check if the group has passed close to any other locations
-			for (AGameLocation* location : locations)
+			if (is_robot_ == false)
 			{
-				if (location != target_location_)
+				// check if the group has passed close to any other locations
+				for (AGameLocation* location : locations)
 				{
-					if (FVector2D::Distance(current_location_, location->GetPosition()) <= 3)
+					if (location != target_location_)
 					{
-						FString alert = "A group of " + FString::FromInt(characters_.Num()) + " recently passed nearby.";
-						location->AddAlert(alert);
+						if (FVector2D::Distance(current_location_, location->GetPosition()) <= 5)
+						{
+							FString alert = "A group of " + FString::FromInt(characters_.Num()) + "people recently passed nearby.";
+							location->AddAlert(alert);
+						}
 					}
 				}
+			}
+			else
+			{
+				// find the nearest location
+				AGameLocation* nearest = nullptr;
+				float nearest_distance = 0;
+				for (AGameLocation* location : locations)
+				{
+					if (nearest == nullptr || nearest_distance > FVector2D::Distance(current_location_, location->GetPosition()))
+					{
+						nearest = location;
+						nearest_distance = FVector2D::Distance(current_location_, location->GetPosition());
+					}
+				}
+
+				// send an alert message
+				FString alert = "Robot spotted nearby.";
+				nearest->AddAlert(alert);
 			}
 		}
 	}

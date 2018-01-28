@@ -14,11 +14,14 @@ AGameWorld::AGameWorld()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	day_number_ = 1;
+	day_number_ = 53;
 	day_timer_ = 0;
+	day_length_ = 120.0f;
+	first_move_ = false;
+	attracting_robots_ = false;
 
 	player_location_ = "Kentville";
-	minimum_required_event_ = DAY_LENGTH / 3.0f;
+	minimum_required_event_ = day_length_ / 6.0f;
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +29,31 @@ void AGameWorld::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// create three groups of survivors
+	for (int i = 0; i < 10; i++)
+	{
+		AGameGroup* group = GetWorld()->SpawnActor<AGameGroup>();
+		
+		// create a random number of survivors
+		int survivor_count = FMath::RandRange(0, 20);
+		for (int j = 0; j < survivor_count; j++)
+		{
+			AGameCharacter* character = GetWorld()->SpawnActor<AGameCharacter>();
+			group->AddCharacter(character);
+		}
+		group->ModifyFoodSupplyLevel(survivor_count * 3.0f);
+		group->ModifyMedicalSupplyLevel(survivor_count);
+		group->ModifyCombatSupplyLevel((survivor_count / 2) + 1);
+
+		player_controlled_groups_.Add(group);
+	}
+
+	// create some robots
+	for (int i = 0; i < 5; i++)
+	{
+		SpawnRobots(1);
+	}
+
 	for (int i = 0; i < player_controlled_groups_.Num(); i++)
 	{
 		player_controlled_groups_[i]->group_index_ = i;
@@ -34,13 +62,16 @@ void AGameWorld::BeginPlay()
 
 float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group, AGameGroup*& targetGroup)
 {
+	if (group->GetHasFought())
+		return 0.0f;
+
 	// check if any player groups are nearby
 	FVector2D current_location = group->GetPosition();
 	float nearest_distance = 1000;
 	AGameGroup* target_group = nullptr;
 	for (AGameGroup* enemy_group : player_controlled_groups_)
 	{
-		if (enemy_group != group && enemy_group->GetIsInEvent() == false)
+		if (enemy_group != group && enemy_group->GetIsInEvent() == false && enemy_group->GetHasFought() == false)
 		{
 			FVector2D target_location = enemy_group->GetPosition();
 
@@ -73,6 +104,11 @@ void AGameWorld::TransitionDay()
 	day_timer_ = 0;
 	day_number_++;
 
+	for (AGameLocation* location : locations_)
+	{
+		location->ClearLocationAlerts();
+	}
+
 	TArray<AGameGroup*> dead_groups;
 	for (AGameGroup* group : player_controlled_groups_)
 	{
@@ -97,6 +133,7 @@ void AGameWorld::TransitionDay()
 
 	for (AGameGroup* d_group : dead_groups)
 	{
+		// send alerts
 		autonomous_groups_.Remove(d_group);
 		d_group->Destroy();
 	}
@@ -120,15 +157,30 @@ void AGameWorld::SpawnRobots(int count)
 	pos.X = FMath::RandRange(0, 99);
 	pos.Y = FMath::RandRange(0, 99);
 	robot_group->SetPosition(pos);
+	robot_group->is_robot_ = true;
 	autonomous_groups_.Add(robot_group);
 }
 
-void AGameWorld::AttractRobots()
+void AGameWorld::ToggleRobotAttract()
 {
-	AGameLocation* location = GetLocationByName(player_location_);
-	for (AGameGroup* group : autonomous_groups_)
+	if (attracting_robots_)
 	{
-		group->SetTargetLocation(location);
+		// set robot target locations to random
+		for (AGameGroup* group : autonomous_groups_)
+		{
+			int location_index = FMath::RandRange(0, locations_.Num() - 1);
+			group->SetTargetLocation(locations_[location_index]);
+		}
+
+		attracting_robots_ = false;
+	}
+	else
+	{
+		AGameLocation* location = GetLocationByName(player_location_);
+		for (AGameGroup* group : autonomous_groups_)
+		{
+			group->SetTargetLocation(location);
+		}
 	}
 }
 
@@ -141,15 +193,54 @@ AGameLocation * AGameWorld::GetLocationByName(FString location_name)
 	return nullptr;
 }
 
+AGameLocation * AGameWorld::GetNearestLocation(FVector2D position)
+{
+	AGameLocation* closest_location = nullptr;
+	float closest_distance = 10000;
+	for (AGameLocation* location : locations_)
+	{
+		float distance = FVector2D::Distance(location->GetPosition(), position);
+		if (closest_location == nullptr || distance < closest_distance)
+		{
+			closest_location = location;
+			closest_distance = distance;
+		}
+	}
+
+	return closest_location;
+}
+
+int AGameWorld::GetRemainingHumans()
+{
+	int count = 0;
+	for (AGameGroup* group : player_controlled_groups_)
+	{
+		count += group->GetCharacters().Num();
+	}
+
+	return count;
+}
+
 // Called every frame
 void AGameWorld::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	day_timer_ += DeltaTime;
-	if (day_timer_ >= DAY_LENGTH)
+	if (day_timer_ >= day_length_)
 	{
 		TransitionDay();
+		first_move_ = false;
+	}
+	else if (day_timer_ >= day_length_ / 2.0f && first_move_ == false)
+	{
+		for (AGameGroup* group : player_controlled_groups_)
+			group->GroupMove();
+
+		for (AGameGroup* group : autonomous_groups_)
+			group->GroupMove();
+
+		first_move_ = true;
 	}
 
 	// loop through the player controlled groups
@@ -251,4 +342,33 @@ void AGameWorld::Tick(float DeltaTime)
 			auto_resolve_events.Empty();
 		}
 	}
+
+	// clean up dead groups
+	TArray<AGameGroup*> dead_groups;
+	for (AGameGroup* group : player_controlled_groups_)
+	{
+		if (group->GetCharacters().Num() <= 0)
+			dead_groups.Add(group);
+	}
+
+	for (AGameGroup* d_group : dead_groups)
+	{
+		player_controlled_groups_.Remove(d_group);
+		d_group->Destroy();
+	}
+	dead_groups.Empty();
+
+	for (AGameGroup* group : autonomous_groups_)
+	{
+		if (group->GetCharacters().Num() <= 0)
+			dead_groups.Add(group);
+	}
+
+	for (AGameGroup* d_group : dead_groups)
+	{
+		// send alerts
+		autonomous_groups_.Remove(d_group);
+		d_group->Destroy();
+	}
+	dead_groups.Empty();
 }
