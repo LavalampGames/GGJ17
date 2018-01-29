@@ -30,12 +30,12 @@ void AGameWorld::BeginPlay()
 	Super::BeginPlay();
 	
 	// create three groups of survivors
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		AGameGroup* group = GetWorld()->SpawnActor<AGameGroup>();
 		
 		// create a random number of survivors
-		int survivor_count = FMath::RandRange(0, 20);
+		int survivor_count = FMath::RandRange(5, 10);
 		for (int j = 0; j < survivor_count; j++)
 		{
 			AGameCharacter* character = GetWorld()->SpawnActor<AGameCharacter>();
@@ -71,7 +71,7 @@ float AGameWorld::CalculateCombatEventMultiplier(AGameGroup * group, AGameGroup*
 	AGameGroup* target_group = nullptr;
 	for (AGameGroup* enemy_group : player_controlled_groups_)
 	{
-		if (enemy_group != group && enemy_group->GetIsInEvent() == false && enemy_group->GetHasFought() == false)
+		if (enemy_group != group && enemy_group->GetIsInEvent() == false && enemy_group->GetHasFought() == false && (!group->is_robot_ || !enemy_group->is_robot_))
 		{
 			FVector2D target_location = enemy_group->GetPosition();
 
@@ -119,6 +119,22 @@ void AGameWorld::TransitionDay()
 	
 	for (AGameGroup* d_group : dead_groups)
 	{
+		// find the nearest location
+		AGameLocation* nearest = nullptr;
+		float nearest_distance = 0;
+		for (AGameLocation* location : locations_)
+		{
+			if (nearest == nullptr || nearest_distance > FVector2D::Distance(d_group->GetPosition(), location->GetPosition()))
+			{
+				nearest = location;
+				nearest_distance = FVector2D::Distance(d_group->GetPosition(), location->GetPosition());
+			}
+		}
+
+		// send an alert message
+		FString alert = "Human remains found nearby.";
+		nearest->AddAlert(alert);
+
 		player_controlled_groups_.Remove(d_group);
 		d_group->Destroy();
 	}
@@ -133,7 +149,22 @@ void AGameWorld::TransitionDay()
 
 	for (AGameGroup* d_group : dead_groups)
 	{
-		// send alerts
+		// find the nearest location
+		AGameLocation* nearest = nullptr;
+		float nearest_distance = 0;
+		for (AGameLocation* location : locations_)
+		{
+			if (nearest == nullptr || nearest_distance > FVector2D::Distance(d_group->GetPosition(), location->GetPosition()))
+			{
+				nearest = location;
+				nearest_distance = FVector2D::Distance(d_group->GetPosition(), location->GetPosition());
+			}
+		}
+
+		// send an alert message
+		FString alert = "Robot destroyed nearby.";
+		nearest->AddAlert(alert);
+
 		autonomous_groups_.Remove(d_group);
 		d_group->Destroy();
 	}

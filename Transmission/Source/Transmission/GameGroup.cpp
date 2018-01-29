@@ -67,7 +67,7 @@ void AGameGroup::EndOfDay()
 	{
 		if (character->food_level_ <= 0)
 		{
-			character->TakeCharacterDamage(0.25f);
+			character->TakeCharacterDamage(-0.25 + character->food_level_);
 		}
 	}
 
@@ -133,7 +133,7 @@ void AGameGroup::GroupMove()
 					{
 						if (FVector2D::Distance(current_location_, location->GetPosition()) <= 5)
 						{
-							FString alert = "A group of " + FString::FromInt(characters_.Num()) + "people recently passed nearby.";
+							FString alert = "A group of " + FString::FromInt(characters_.Num()) + " people recently passed nearby.";
 							location->AddAlert(alert);
 						}
 					}

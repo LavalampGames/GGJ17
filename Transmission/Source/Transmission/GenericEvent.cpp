@@ -27,11 +27,11 @@ void AGenericEvent::BeginEvent_Implementation()
 	AStimulus* stimulus = GetWorld()->SpawnActor<AStimulus>();
 	stimulus->groups_.Add(associated_groups_[0]);
 
-	TArray<AActor*> responders;
-	UGameplayStatics::GetAllActorsOfClass(this, AResponder::StaticClass(), responders);
-	AResponder* responder = (AResponder*)(responders[0]);
+	//TArray<AActor*> responders;
+	//UGameplayStatics::GetAllActorsOfClass(this, AResponder::StaticClass(), responders);
+	//AResponder* responder = (AResponder*)(responders[0]);
 
-	int response_index = FMath::RandRange(0, event_lines_.Num() - 1);
+	//int response_index = FMath::RandRange(0, event_lines_.Num() - 1);
 	//responder->DisplayResponseText(event_lines_[response_index]);
 
 	game_mode->SequenceBegin(sequence, stimulus, 0);
